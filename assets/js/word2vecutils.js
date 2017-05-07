@@ -123,10 +123,13 @@ var Word2VecUtils = (function() {
   }
 	
 	function wordBagArrToVec(wordBagArr) {
-		var wordBagVec = wordVecs[wordBagArr[0]];
+		var wordBagVec = Array(300).fill(0.0);
 		
-		for (var i = 1; i < wordBagArr.length; i++) {
-			wordBagVec = addVecs(wordBagVec, wordVecs[wordBagArr[i]])
+		for (var i = 0; i < wordBagArr.length; i++) {
+			var word = wordBagArr[i];
+			if (wordVecs.hasOwnProperty(word)) {
+				wordBagVec = addVecs(wordBagVec, wordVecs[word])				
+			}
 		}
 		
 		return norm(wordBagVec);
@@ -141,6 +144,7 @@ var Word2VecUtils = (function() {
     subVecs: subVecs,
     getNClosestMatches: getNClosestMatches,
     getCosSim: getCosSim,
-		compareWordBags: compareWordBags
+		compareWordBags: compareWordBags,
+		wordBagArrToVec: wordBagArrToVec
   };
 })();
