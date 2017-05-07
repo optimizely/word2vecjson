@@ -81,7 +81,14 @@ var Word2VecUtils = (function() {
     });
     return sims.slice(0, n);
   }
-
+  
+  function compareWordBags(wordBag1, wordBag2) {
+		var wordBag1Vec = wordBagArrToVec(wordBag1);
+		var wordBag2Vec = wordBagArrToVec(wordBag2);
+		
+		return getCosSim(wordBag1Vec, wordBag2Vec);
+  }
+  
   /********************
    * helper functions */
   function getCosSim(f1, f2) {
@@ -97,9 +104,9 @@ var Word2VecUtils = (function() {
   }
 
   function norm(a) {
-    var mag = mag(a);
+    var magnitude = mag(a);
     return a.map(function(val) {
-      return val/mag; 
+      return val/magnitude; 
     });
   }
 
@@ -114,6 +121,16 @@ var Word2VecUtils = (function() {
       return val - b[idx]; 
     });
   }
+	
+	function wordBagArrToVec(wordBagArr) {
+		var wordBagVec = wordVecs[wordBagArr[0]];
+		
+		for (var i = 1; i < wordBagArr.length; i++) {
+			wordBagVec = addVecs(wordBagVec, wordVecs[wordBagArr[i]])
+		}
+		
+		return norm(wordBagVec);
+	}
 
   return {
     diffN: diffN,
@@ -123,6 +140,7 @@ var Word2VecUtils = (function() {
     addVecs: addVecs,
     subVecs: subVecs,
     getNClosestMatches: getNClosestMatches,
-    getCosSim: getCosSim
+    getCosSim: getCosSim,
+		compareWordBags: compareWordBags
   };
 })();
